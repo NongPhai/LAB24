@@ -1,6 +1,8 @@
 #include<iostream>
 #include<cmath>
+#define PI 3.14159265
 using namespace std;
+
 
 class ComplexNumber{				
 	public:
@@ -11,6 +13,11 @@ class ComplexNumber{
 		ComplexNumber operator-(const ComplexNumber &);
 		ComplexNumber operator*(const ComplexNumber &);
 		ComplexNumber operator/(const ComplexNumber &);
+		friend ComplexNumber operator+(double,const ComplexNumber &);
+		friend ComplexNumber operator-(double,const ComplexNumber &);
+		friend ComplexNumber operator*(double,const ComplexNumber &);
+		friend ComplexNumber operator/(double,const ComplexNumber &);
+		friend bool operator==(double,const ComplexNumber &);
 		bool operator==(const ComplexNumber &);
 		double abs();
 		double angle();
@@ -29,6 +36,44 @@ ComplexNumber ComplexNumber::operator-(const ComplexNumber &c){
 }
 
 //Write your code here
+ComplexNumber operator+(double s,const ComplexNumber &c){
+	return ComplexNumber(s+c.real,c.imag);
+}
+ComplexNumber operator-(double s,const ComplexNumber &c){
+	return ComplexNumber(s-c.real,-c.imag);
+}
+ComplexNumber ComplexNumber::operator*(const ComplexNumber &c){
+	return ComplexNumber(real*c.real-imag*c.imag,real*c.imag+imag*c.real);
+}
+ComplexNumber operator*(double s,const ComplexNumber &c){
+	return ComplexNumber(s*c.real,s*c.imag);
+}
+ComplexNumber ComplexNumber::operator/(const ComplexNumber &c){
+	return ComplexNumber((real*c.real+imag*c.imag)/(pow(c.real,2)+pow(c.imag,2)),(imag*c.real-real*c.imag)/(pow(c.real,2)+pow(c.imag,2)));
+}
+ComplexNumber operator/(double s,const ComplexNumber &c){
+	return ComplexNumber(s*c.real/(pow(c.real,2)+pow(c.imag,2)),-s*c.imag/(pow(c.real,2)+pow(c.imag,2)));
+}
+double ComplexNumber::abs(){
+	return sqrt(pow(real,2)+pow(imag,2));
+}
+double ComplexNumber::angle(){
+	return atan2(imag,real)*180/M_PI;
+}
+bool ComplexNumber::operator==(const ComplexNumber &c){
+	return (real == c.real && imag == c.imag);
+}
+bool operator==(double s,const ComplexNumber &c){
+	return (s == c.real && c.imag == 0);
+}
+ostream& operator<<(ostream& os,const ComplexNumber& c){
+	if(c.real == 0 && c.imag == 0) os << 0;
+	else if(c.real == 0) os << c.imag << "i";
+	else if(c.imag == 0) os << c.real;
+	else if(c.imag > 0) os << c.real << "+" << c.imag << "i";
+	else os << c.real << c.imag << "i";
+	return os;
+}
 
 int main(){
 	ComplexNumber a(1.5,2),b(3.2,-2.5),c(-1,1.2);	
